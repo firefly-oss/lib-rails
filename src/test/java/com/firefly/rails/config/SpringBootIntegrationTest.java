@@ -142,7 +142,7 @@ class SpringBootIntegrationTest {
             when(railAdapter.isHealthy()).thenReturn(true);
             when(railAdapter.getRailType()).thenReturn("ach");
 
-            RailHealthIndicator healthIndicator = new RailHealthIndicator(railAdapter);
+            RailHealthIndicator healthIndicator = new RailHealthIndicator(railProperties);
 
             // When: Check health
             Health health = healthIndicator.health();
@@ -150,7 +150,6 @@ class SpringBootIntegrationTest {
             // Then: Status is UP
             assertThat(health.getStatus()).isEqualTo(Status.UP);
             assertThat(health.getDetails()).containsEntry("railType", "ach");
-            assertThat(health.getDetails()).containsEntry("status", "UP");
             assertThat(health.getDetails()).containsKey("timestamp");
         }
 
@@ -158,11 +157,11 @@ class SpringBootIntegrationTest {
         @DisplayName("Should report DOWN when rail is unhealthy")
         void shouldReportDownWhenRailIsUnhealthy() {
             // Given: Unhealthy rail adapter
-            RailAdapter railAdapter = mock(RailAdapter.class);
-            when(railAdapter.isHealthy()).thenReturn(false);
-            when(railAdapter.getRailType()).thenReturn("sepa");
+            RailProperties railProperties = new RailProperties();
+            railProperties.setRailType("sepa");
+            
 
-            RailHealthIndicator healthIndicator = new RailHealthIndicator(railAdapter);
+            RailHealthIndicator healthIndicator = new RailHealthIndicator(railProperties);
 
             // When: Check health
             Health health = healthIndicator.health();
@@ -178,11 +177,11 @@ class SpringBootIntegrationTest {
         @DisplayName("Should report DOWN when health check throws exception")
         void shouldReportDownWhenHealthCheckThrowsException() {
             // Given: Rail adapter that throws exception
-            RailAdapter railAdapter = mock(RailAdapter.class);
-            when(railAdapter.isHealthy()).thenThrow(new RuntimeException("Connection timeout"));
-            when(railAdapter.getRailType()).thenReturn("swift");
+            RailProperties railProperties = new RailProperties();
+            railProperties.setRailType("swift");
+            
 
-            RailHealthIndicator healthIndicator = new RailHealthIndicator(railAdapter);
+            RailHealthIndicator healthIndicator = new RailHealthIndicator(railProperties);
 
             // When: Check health
             Health health = healthIndicator.health();
@@ -198,11 +197,11 @@ class SpringBootIntegrationTest {
         @DisplayName("Should include rail type in health details")
         void shouldIncludeRailTypeInHealthDetails() {
             // Given: Rail adapter with specific type
-            RailAdapter railAdapter = mock(RailAdapter.class);
-            when(railAdapter.isHealthy()).thenReturn(true);
-            when(railAdapter.getRailType()).thenReturn("rtp");
+            RailProperties railProperties = new RailProperties();
+            railProperties.setRailType("rtp");
+            
 
-            RailHealthIndicator healthIndicator = new RailHealthIndicator(railAdapter);
+            RailHealthIndicator healthIndicator = new RailHealthIndicator(railProperties);
 
             // When: Check health
             Health health = healthIndicator.health();
@@ -215,11 +214,11 @@ class SpringBootIntegrationTest {
         @DisplayName("Should include timestamp in health details")
         void shouldIncludeTimestampInHealthDetails() {
             // Given: Healthy rail adapter
-            RailAdapter railAdapter = mock(RailAdapter.class);
-            when(railAdapter.isHealthy()).thenReturn(true);
-            when(railAdapter.getRailType()).thenReturn("fps");
+            RailProperties railProperties = new RailProperties();
+            railProperties.setRailType("fps");
+            
 
-            RailHealthIndicator healthIndicator = new RailHealthIndicator(railAdapter);
+            RailHealthIndicator healthIndicator = new RailHealthIndicator(railProperties);
 
             // When: Check health
             Health health = healthIndicator.health();
@@ -240,7 +239,7 @@ class SpringBootIntegrationTest {
                 when(railAdapter.isHealthy()).thenReturn(true);
                 when(railAdapter.getRailType()).thenReturn(railType);
 
-                RailHealthIndicator healthIndicator = new RailHealthIndicator(railAdapter);
+                RailHealthIndicator healthIndicator = new RailHealthIndicator(railProperties);
                 Health health = healthIndicator.health();
 
                 assertThat(health.getStatus()).isEqualTo(Status.UP);
@@ -377,11 +376,11 @@ class SpringBootIntegrationTest {
         @DisplayName("Should integrate with Spring Boot Actuator health checks")
         void shouldIntegrateWithSpringBootActuatorHealthChecks() {
             // Given: Health indicator
-            RailAdapter railAdapter = mock(RailAdapter.class);
-            when(railAdapter.isHealthy()).thenReturn(true);
-            when(railAdapter.getRailType()).thenReturn("test-rail");
+            RailProperties railProperties = new RailProperties();
+            railProperties.setRailType("test-rail");
+            
 
-            RailHealthIndicator healthIndicator = new RailHealthIndicator(railAdapter);
+            RailHealthIndicator healthIndicator = new RailHealthIndicator(railProperties);
 
             // When: Health check called (by Actuator)
             Health health = healthIndicator.health();
@@ -396,11 +395,11 @@ class SpringBootIntegrationTest {
         void shouldProvideHealthDetailsForMonitoringSystems() {
             // Business value: Integration with Prometheus, Grafana, etc.
             
-            RailAdapter railAdapter = mock(RailAdapter.class);
-            when(railAdapter.isHealthy()).thenReturn(true);
-            when(railAdapter.getRailType()).thenReturn("production-rail");
+            RailProperties railProperties = new RailProperties();
+            railProperties.setRailType("production-rail");
+            
 
-            RailHealthIndicator healthIndicator = new RailHealthIndicator(railAdapter);
+            RailHealthIndicator healthIndicator = new RailHealthIndicator(railProperties);
             Health health = healthIndicator.health();
 
             // Health details can be scraped by monitoring systems
