@@ -37,7 +37,7 @@ The `lib-rails` library provides a unified, type-safe interface for integrating 
 ### Key Features
 
 #### **Core Capabilities**
-- **10 Port Interfaces** - Complete rail operation coverage
+- **9 Port Interfaces** - Complete rail operation coverage
 - **Payment Initiation** - Credit transfers, debits, wire transfers
 - **Direct Debit Management** - Mandate creation and management
 - **Bulk/Batch Payments** - High-volume payment processing
@@ -116,17 +116,27 @@ The library defines 10 port interfaces representing all rail operations:
 | **BulkPaymentPort** | Batch payments | 3 |
 | **ReconciliationPort** | Transaction reconciliation | 3 |
 | **RailSpecificPort** | Custom rail operations | 2 |
-| **WebhookPort** | Webhook management | 6 |
-| **ScheduledPaymentPort** | Scheduled & recurring payments | 10 |
+| **ScheduledPaymentPort** | Scheduled & recurring payments | 9 |
 | **CompliancePort** | AML/KYC/Sanctions | 6 |
-| **RailAdapter** | Main entry point | All 10 ports |
+| **RailAdapter** | Main entry point | All 9 ports |
 
 ### Abstract Components
 
 Implementations inherit pre-built functionality:
 
+#### **Service Layer**
 - **AbstractRailService** - Service layer with logging and error handling
-- **AbstractPaymentRailController** - 5 REST endpoints (initiate, get, cancel, list, status)
+
+#### **Controller Layer (Zero Boilerplate REST APIs)**
+- **AbstractPaymentRailController** - Payment operations with SCA support (13 endpoints)
+- **AbstractStatusController** - Status inquiry (3 endpoints)
+- **AbstractSettlementController** - Settlement reporting (4 endpoints)
+- **AbstractMandateController** - Direct debit mandates (5 endpoints)
+- **AbstractBulkPaymentController** - Bulk payments (3 endpoints)
+- **AbstractReconciliationController** - Reconciliation (3 endpoints)
+- **AbstractScheduledPaymentController** - Scheduled & recurring payments (9 endpoints)
+- **AbstractComplianceController** - AML/KYC compliance (6 endpoints)
+- **AbstractRailSpecificController** - Custom rail operations (2 endpoints)
 
 ## Usage Examples
 
