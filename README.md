@@ -37,14 +37,17 @@ The `lib-rails` library provides a unified, type-safe interface for integrating 
 ### Key Features
 
 #### **Core Capabilities**
-- **9 Port Interfaces** - Complete rail operation coverage
-- **Payment Initiation** - Credit transfers, debits, wire transfers
-- **Direct Debit Management** - Mandate creation and management
-- **Bulk/Batch Payments** - High-volume payment processing
-- **Settlement Reporting** - Real-time settlement tracking
-- **Status Inquiry** - Real-time payment tracking
-- **Reconciliation** - Transaction matching and discrepancy detection
-- **Auto-Configured Controllers** - Zero boilerplate REST API
+- **9 Port Interfaces** (47+ methods) - Complete rail operation coverage
+- **Payment Initiation** - Credit transfers, debits, wire transfers (12 methods)
+- **Scheduled & Recurring Payments** - Future-dated and standing orders (9 methods)
+- **Direct Debit Management** - Mandate creation and management (5 methods)
+- **Bulk/Batch Payments** - High-volume payment processing (3 methods)
+- **Settlement Reporting** - Real-time settlement tracking (4 methods)
+- **Status Inquiry** - Real-time payment tracking (3 methods)
+- **Reconciliation** - Transaction matching and discrepancy detection (3 methods)
+- **Compliance & Regulatory** - AML/KYC/Sanctions screening (6 methods)
+- **Rail-Specific Operations** - Custom rail features (2 methods)
+- **9 Auto-Configured Controllers** - Zero boilerplate REST API (43+ endpoints)
 - **Abstract Service Layer** - Standardized implementation patterns
 - **Reactive & Non-Blocking** - Built on Project Reactor
 - **Type-Safe** - Strong typing throughout
@@ -105,20 +108,20 @@ firefly:
 
 ### Port Interfaces (Hexagonal Architecture)
 
-The library defines 10 port interfaces representing all rail operations:
+The library defines **9 port interfaces** representing all rail operations:
 
 | Port | Purpose | Methods |
 |------|---------|---------|
-| **PaymentRailPort** | Payment initiation & management | 13 |
+| **PaymentRailPort** | Payment initiation & management | 12 |
+| **ScheduledPaymentPort** | Scheduled & recurring payments | 9 |
+| **CompliancePort** | AML/KYC/Sanctions screening | 6 |
+| **MandatePort** | Direct debit mandates | 5 |
 | **SettlementPort** | Settlement reporting | 4 |
 | **StatusPort** | Real-time status tracking | 3 |
-| **MandatePort** | Direct debit mandates | 5 |
 | **BulkPaymentPort** | Batch payments | 3 |
 | **ReconciliationPort** | Transaction reconciliation | 3 |
 | **RailSpecificPort** | Custom rail operations | 2 |
-| **ScheduledPaymentPort** | Scheduled & recurring payments | 9 |
-| **CompliancePort** | AML/KYC/Sanctions | 6 |
-| **RailAdapter** | Main entry point | All 9 ports |
+| **RailAdapter** | Main entry point | All 9 ports (47 methods) |
 
 ### Abstract Components
 
@@ -128,15 +131,17 @@ Implementations inherit pre-built functionality:
 - **AbstractRailService** - Service layer with logging and error handling
 
 #### **Controller Layer (Zero Boilerplate REST APIs)**
-- **AbstractPaymentRailController** - Payment operations with SCA support (13 endpoints)
-- **AbstractStatusController** - Status inquiry (3 endpoints)
-- **AbstractSettlementController** - Settlement reporting (4 endpoints)
-- **AbstractMandateController** - Direct debit mandates (5 endpoints)
-- **AbstractBulkPaymentController** - Bulk payments (3 endpoints)
-- **AbstractReconciliationController** - Reconciliation (3 endpoints)
+- **AbstractPaymentRailController** - Payment operations with SCA support (12 endpoints)
 - **AbstractScheduledPaymentController** - Scheduled & recurring payments (9 endpoints)
 - **AbstractComplianceController** - AML/KYC compliance (6 endpoints)
+- **AbstractMandateController** - Direct debit mandates (5 endpoints)
+- **AbstractSettlementController** - Settlement reporting (4 endpoints)
+- **AbstractStatusController** - Status inquiry (3 endpoints)
+- **AbstractBulkPaymentController** - Bulk payments (3 endpoints)
+- **AbstractReconciliationController** - Reconciliation (3 endpoints)
 - **AbstractRailSpecificController** - Custom rail operations (2 endpoints)
+
+**Total: 9 abstract controllers providing 47+ REST endpoints**
 
 ## Usage Examples
 
@@ -365,15 +370,15 @@ Use for:
 To add a new banking rail implementation:
 
 1. Create a new module (e.g., `lib-rails-ach-impl`)
-2. Implement the 10 port interfaces (~1,200 lines of rail-specific logic)
+2. Implement the 9 port interfaces (47 methods, ~1,500 lines of rail-specific logic)
 3. Extend `AbstractRailService` (~5 lines)
-4. Extend 3 abstract controllers (~30 lines)
-5. Create mappers for DTO conversion (~400 lines)
+4. Extend 9 abstract controllers (~50 lines total)
+5. Create mappers for DTO conversion (~500 lines)
 6. Add Spring Boot auto-configuration (~50 lines)
 
-**Result**: Complete REST API with 30+ endpoints, service layer, logging, error handling, and enterprise features!
+**Result**: Complete REST API with **47+ endpoints**, service layer, logging, error handling, and enterprise features!
 
-**Implementation effort**: 4-8 days → **Productivity multiplier: 7x**
+**Implementation effort**: 5-10 days → **Productivity multiplier: 7x**
 
 ## Benefits
 
@@ -402,14 +407,24 @@ To add a new banking rail implementation:
 
 ## Statistics
 
-- 10 port interfaces (55 methods)
-- 16 domain models
-- 66 DTOs
-- 9 exception classes
-- 3 abstract controllers
-- 1 abstract service layer
-- 1 health indicator
-- 109 Java files (3,304 lines)
+- **9 port interfaces** (47 methods total)
+  - PaymentRailPort: 12 methods
+  - ScheduledPaymentPort: 9 methods
+  - CompliancePort: 6 methods
+  - MandatePort: 5 methods
+  - SettlementPort: 4 methods
+  - StatusPort: 3 methods
+  - BulkPaymentPort: 3 methods
+  - ReconciliationPort: 3 methods
+  - RailSpecificPort: 2 methods
+- **1 adapter interface** (RailAdapter - main entry point)
+- **28 domain models** - Type-safe value objects (Money, Currency, BankAccount, etc.)
+- **60 DTOs** - Complete request/response objects
+- **9 exception classes** - Comprehensive error handling
+- **9 abstract controllers** - Zero boilerplate REST APIs (47+ endpoints)
+- **1 abstract service layer** - Standardized implementation patterns
+- **1 health indicator** - Spring Actuator integration
+- **129 Java files** (~6,200 lines of production code)
 
 ## License
 
