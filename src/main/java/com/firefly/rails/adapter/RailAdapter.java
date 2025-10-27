@@ -87,14 +87,6 @@ public interface RailAdapter {
     RailSpecificPort railSpecific();
 
     /**
-     * Get the webhook management port.
-     * Handles webhook registration, verification, and event processing.
-     *
-     * @return WebhookPort instance
-     */
-    WebhookPort webhooks();
-
-    /**
      * Get the scheduled payment port.
      * Handles future-dated and recurring payments.
      *

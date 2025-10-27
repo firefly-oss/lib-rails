@@ -29,7 +29,6 @@ class RailAdapterTest {
     @Mock private BulkPaymentPort bulkPaymentPort;
     @Mock private ReconciliationPort reconciliationPort;
     @Mock private RailSpecificPort railSpecificPort;
-    @Mock private WebhookPort webhookPort;
     @Mock private ScheduledPaymentPort scheduledPaymentPort;
     @Mock private CompliancePort compliancePort;
 
@@ -50,7 +49,7 @@ class RailAdapterTest {
             // Given: ACH rail adapter
             railAdapter = new TestRailAdapter("ach", paymentRailPort, settlementPort, 
                 statusPort, mandatePort, bulkPaymentPort, reconciliationPort, 
-                railSpecificPort, webhookPort, scheduledPaymentPort, compliancePort);
+                railSpecificPort, scheduledPaymentPort, compliancePort);
 
             // When & Then: All ports accessible
             assertThat(railAdapter.payments()).isNotNull();
@@ -60,7 +59,6 @@ class RailAdapterTest {
             assertThat(railAdapter.bulkPayments()).isNotNull();
             assertThat(railAdapter.reconciliation()).isNotNull();
             assertThat(railAdapter.railSpecific()).isNotNull();
-            assertThat(railAdapter.webhooks()).isNotNull();
             assertThat(railAdapter.scheduledPayments()).isNotNull();
             assertThat(railAdapter.compliance()).isNotNull();
             assertThat(railAdapter.getRailType()).isEqualTo("ach");
@@ -72,7 +70,7 @@ class RailAdapterTest {
             // Given: SEPA rail adapter
             railAdapter = new TestRailAdapter("sepa", paymentRailPort, settlementPort, 
                 statusPort, mandatePort, bulkPaymentPort, reconciliationPort, 
-                railSpecificPort, webhookPort, scheduledPaymentPort, compliancePort);
+                railSpecificPort, scheduledPaymentPort, compliancePort);
 
             // When & Then: All ports accessible with same interface
             assertThat(railAdapter.payments()).isNotNull();
@@ -86,7 +84,7 @@ class RailAdapterTest {
             // Given: SWIFT rail adapter
             railAdapter = new TestRailAdapter("swift", paymentRailPort, settlementPort, 
                 statusPort, mandatePort, bulkPaymentPort, reconciliationPort, 
-                railSpecificPort, webhookPort, scheduledPaymentPort, compliancePort);
+                railSpecificPort, scheduledPaymentPort, compliancePort);
 
             // When & Then: All ports accessible with same interface
             assertThat(railAdapter.payments()).isNotNull();
@@ -99,7 +97,7 @@ class RailAdapterTest {
             // Given: RTP rail adapter
             railAdapter = new TestRailAdapter("rtp", paymentRailPort, settlementPort, 
                 statusPort, mandatePort, bulkPaymentPort, reconciliationPort, 
-                railSpecificPort, webhookPort, scheduledPaymentPort, compliancePort);
+                railSpecificPort, scheduledPaymentPort, compliancePort);
 
             // When & Then: All ports accessible with same interface
             assertThat(railAdapter.payments()).isNotNull();
@@ -115,8 +113,7 @@ class RailAdapterTest {
         void setUp() {
             railAdapter = new TestRailAdapter("test-rail", paymentRailPort, 
                 settlementPort, statusPort, mandatePort, bulkPaymentPort, 
-                reconciliationPort, railSpecificPort, webhookPort, 
-                scheduledPaymentPort, compliancePort);
+                reconciliationPort, railSpecificPort, scheduledPaymentPort, compliancePort);
         }
 
         @Test
@@ -162,12 +159,6 @@ class RailAdapterTest {
         }
 
         @Test
-        @DisplayName("Should provide access to WebhookPort")
-        void shouldProvideAccessToWebhookPort() {
-            assertThat(railAdapter.webhooks()).isSameAs(webhookPort);
-        }
-
-        @Test
         @DisplayName("Should provide access to ScheduledPaymentPort")
         void shouldProvideAccessToScheduledPaymentPort() {
             assertThat(railAdapter.scheduledPayments()).isSameAs(scheduledPaymentPort);
@@ -180,9 +171,9 @@ class RailAdapterTest {
         }
 
         @Test
-        @DisplayName("Should provide all 10 ports")
-        void shouldProvideAllTenPorts() {
-            // Business value: Complete feature coverage through 10 specialized ports
+        @DisplayName("Should provide all 9 ports")
+        void shouldProvideAllNinePorts() {
+            // Business value: Complete feature coverage through 9 specialized ports
             assertThat(railAdapter.payments()).isNotNull();
             assertThat(railAdapter.settlement()).isNotNull();
             assertThat(railAdapter.status()).isNotNull();
@@ -190,7 +181,6 @@ class RailAdapterTest {
             assertThat(railAdapter.bulkPayments()).isNotNull();
             assertThat(railAdapter.reconciliation()).isNotNull();
             assertThat(railAdapter.railSpecific()).isNotNull();
-            assertThat(railAdapter.webhooks()).isNotNull();
             assertThat(railAdapter.scheduledPayments()).isNotNull();
             assertThat(railAdapter.compliance()).isNotNull();
         }
@@ -206,8 +196,7 @@ class RailAdapterTest {
             // Given: Healthy rail adapter
             railAdapter = new TestRailAdapter("test-rail", true, paymentRailPort, 
                 settlementPort, statusPort, mandatePort, bulkPaymentPort, 
-                reconciliationPort, railSpecificPort, webhookPort, 
-                scheduledPaymentPort, compliancePort);
+                reconciliationPort, railSpecificPort, scheduledPaymentPort, compliancePort);
 
             // When & Then
             assertThat(railAdapter.isHealthy()).isTrue();
@@ -219,8 +208,7 @@ class RailAdapterTest {
             // Given: Unhealthy rail adapter
             railAdapter = new TestRailAdapter("test-rail", false, paymentRailPort, 
                 settlementPort, statusPort, mandatePort, bulkPaymentPort, 
-                reconciliationPort, railSpecificPort, webhookPort, 
-                scheduledPaymentPort, compliancePort);
+                reconciliationPort, railSpecificPort, scheduledPaymentPort, compliancePort);
 
             // When & Then
             assertThat(railAdapter.isHealthy()).isFalse();
@@ -237,8 +225,7 @@ class RailAdapterTest {
             // Given: Rail adapter with all ports
             railAdapter = new TestRailAdapter("test-rail", paymentRailPort, 
                 settlementPort, statusPort, mandatePort, bulkPaymentPort, 
-                reconciliationPort, railSpecificPort, webhookPort, 
-                scheduledPaymentPort, compliancePort);
+                reconciliationPort, railSpecificPort, scheduledPaymentPort, compliancePort);
 
             // When & Then: Adapter exposes ports, not implementation details
             assertThat(railAdapter.payments()).isInstanceOf(PaymentRailPort.class);
@@ -248,7 +235,6 @@ class RailAdapterTest {
             assertThat(railAdapter.bulkPayments()).isInstanceOf(BulkPaymentPort.class);
             assertThat(railAdapter.reconciliation()).isInstanceOf(ReconciliationPort.class);
             assertThat(railAdapter.railSpecific()).isInstanceOf(RailSpecificPort.class);
-            assertThat(railAdapter.webhooks()).isInstanceOf(WebhookPort.class);
             assertThat(railAdapter.scheduledPayments()).isInstanceOf(ScheduledPaymentPort.class);
             assertThat(railAdapter.compliance()).isInstanceOf(CompliancePort.class);
         }
@@ -261,15 +247,13 @@ class RailAdapterTest {
             // Switch to ACH
             RailAdapter achAdapter = new TestRailAdapter("ach", paymentRailPort, 
                 settlementPort, statusPort, mandatePort, bulkPaymentPort, 
-                reconciliationPort, railSpecificPort, webhookPort, 
-                scheduledPaymentPort, compliancePort);
+                reconciliationPort, railSpecificPort, scheduledPaymentPort, compliancePort);
             assertThat(achAdapter.getRailType()).isEqualTo("ach");
 
             // Switch to SEPA
             RailAdapter sepaAdapter = new TestRailAdapter("sepa", paymentRailPort, 
                 settlementPort, statusPort, mandatePort, bulkPaymentPort, 
-                reconciliationPort, railSpecificPort, webhookPort, 
-                scheduledPaymentPort, compliancePort);
+                reconciliationPort, railSpecificPort, scheduledPaymentPort, compliancePort);
             assertThat(sepaAdapter.getRailType()).isEqualTo("sepa");
 
             // Same interface, different rail
@@ -291,7 +275,6 @@ class RailAdapterTest {
         private final BulkPaymentPort bulkPaymentPort;
         private final ReconciliationPort reconciliationPort;
         private final RailSpecificPort railSpecificPort;
-        private final WebhookPort webhookPort;
         private final ScheduledPaymentPort scheduledPaymentPort;
         private final CompliancePort compliancePort;
 
@@ -299,19 +282,19 @@ class RailAdapterTest {
                        SettlementPort settlementPort, StatusPort statusPort, 
                        MandatePort mandatePort, BulkPaymentPort bulkPaymentPort, 
                        ReconciliationPort reconciliationPort, 
-                       RailSpecificPort railSpecificPort, WebhookPort webhookPort, 
+                       RailSpecificPort railSpecificPort, 
                        ScheduledPaymentPort scheduledPaymentPort, 
                        CompliancePort compliancePort) {
             this(railType, true, paymentRailPort, settlementPort, statusPort, 
                  mandatePort, bulkPaymentPort, reconciliationPort, 
-                 railSpecificPort, webhookPort, scheduledPaymentPort, compliancePort);
+                 railSpecificPort, scheduledPaymentPort, compliancePort);
         }
 
         TestRailAdapter(String railType, boolean healthy, PaymentRailPort paymentRailPort, 
                        SettlementPort settlementPort, StatusPort statusPort, 
                        MandatePort mandatePort, BulkPaymentPort bulkPaymentPort, 
                        ReconciliationPort reconciliationPort, 
-                       RailSpecificPort railSpecificPort, WebhookPort webhookPort, 
+                       RailSpecificPort railSpecificPort, 
                        ScheduledPaymentPort scheduledPaymentPort, 
                        CompliancePort compliancePort) {
             this.railType = railType;
@@ -323,7 +306,6 @@ class RailAdapterTest {
             this.bulkPaymentPort = bulkPaymentPort;
             this.reconciliationPort = reconciliationPort;
             this.railSpecificPort = railSpecificPort;
-            this.webhookPort = webhookPort;
             this.scheduledPaymentPort = scheduledPaymentPort;
             this.compliancePort = compliancePort;
         }
@@ -335,7 +317,6 @@ class RailAdapterTest {
         @Override public BulkPaymentPort bulkPayments() { return bulkPaymentPort; }
         @Override public ReconciliationPort reconciliation() { return reconciliationPort; }
         @Override public RailSpecificPort railSpecific() { return railSpecificPort; }
-        @Override public WebhookPort webhooks() { return webhookPort; }
         @Override public ScheduledPaymentPort scheduledPayments() { return scheduledPaymentPort; }
         @Override public CompliancePort compliance() { return compliancePort; }
         @Override public String getRailType() { return railType; }
