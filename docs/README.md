@@ -6,6 +6,8 @@ Complete documentation for the Firefly Banking Rails Abstraction Library.
 
 ### Getting Started
 - **[Main README](../README.md)** - Quick start guide, usage examples, and basic configuration
+- **[USAGE_GUIDE.md](USAGE_GUIDE.md)** - ✨ **NEW** Common payment scenarios with complete examples
+- **[IMPLEMENTATION_GUIDE.md](IMPLEMENTATION_GUIDE.md)** - ✨ **NEW** Step-by-step guide to implementing new rails
 - **[TESTING_GUIDE.md](TESTING_GUIDE.md)** - Comprehensive testing guide with 80+ tests
 
 ### Architecture & Design
@@ -27,7 +29,7 @@ Complete documentation for the Firefly Banking Rails Abstraction Library.
 
 ### For First-Time Users
 1. Start with the [Main README](../README.md) for a quick overview
-2. Read [PROJECT_SUMMARY.md](PROJECT_SUMMARY.md) for project context
+2. Read [USAGE_GUIDE.md](USAGE_GUIDE.md) for practical examples
 3. Review [ULTIMATE_FEATURES.md](ULTIMATE_FEATURES.md) for comprehensive feature list
 
 ### For Developers
@@ -36,9 +38,10 @@ Complete documentation for the Firefly Banking Rails Abstraction Library.
 3. Check [REAL_WORLD_FEATURES.md](REAL_WORLD_FEATURES.md) for practical examples
 
 ### For Rail Implementers
-1. Start with [ARCHITECTURE.md](ARCHITECTURE.md) for hexagonal architecture overview
-2. Review [COMPLETE_FEATURES.md](COMPLETE_FEATURES.md) for all port interfaces
-3. Refer to [ULTIMATE_FEATURES.md](ULTIMATE_FEATURES.md) for specific rail examples
+1. Start with [IMPLEMENTATION_GUIDE.md](IMPLEMENTATION_GUIDE.md) for step-by-step instructions
+2. Review [ARCHITECTURE.md](ARCHITECTURE.md) for hexagonal architecture overview
+3. Check [COMPLETE_FEATURES.md](COMPLETE_FEATURES.md) for all port interfaces
+4. See [USAGE_GUIDE.md](USAGE_GUIDE.md) for SEPA, SWIFT, and other rail examples
 
 ### For Stakeholders & Management
 1. Read [EXECUTIVE_SUMMARY.md](EXECUTIVE_SUMMARY.md) for business case and ROI
