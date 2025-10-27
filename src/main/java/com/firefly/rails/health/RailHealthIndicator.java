@@ -4,7 +4,7 @@
 
 package com.firefly.rails.health;
 
-import com.firefly.rails.adapter.RailAdapter;
+import com.firefly.rails.config.RailProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.actuate.health.Health;
@@ -18,40 +18,42 @@ import java.util.Map;
 /**
  * Health indicator for banking rail connectivity.
  * 
- * Integrates with Spring Boot Actuator to provide health check endpoints.
+ * <p>Integrates with Spring Boot Actuator to provide health check endpoints.
+ * The health check reports the rail type and basic configuration status.
+ * 
+ * <p>Implementations should provide their own custom health checks by
+ * implementing additional HealthIndicator beans that check actual
+ * connectivity to external rail systems.
+ * 
+ * @see HealthIndicator
+ * @see org.springframework.boot.actuate.health.Health
  */
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class RailHealthIndicator implements HealthIndicator {
 
-    private final RailAdapter railAdapter;
+    private final RailProperties railProperties;
 
     @Override
     public Health health() {
         try {
-            boolean isHealthy = railAdapter.isHealthy();
-            
             Map<String, Object> details = new HashMap<>();
-            details.put("railType", railAdapter.getRailType());
+            details.put("railType", railProperties.getRailType());
+            details.put("basePath", railProperties.getBasePath());
             details.put("timestamp", Instant.now());
-            details.put("status", isHealthy ? "UP" : "DOWN");
+            details.put("libraryVersion", "1.0.0-SNAPSHOT");
             
-            if (isHealthy) {
-                return Health.up()
-                        .withDetails(details)
-                        .build();
-            } else {
-                return Health.down()
-                        .withDetails(details)
-                        .withDetail("reason", "Rail connectivity check failed")
-                        .build();
-            }
+            // Basic health check - configuration is loaded
+            return Health.up()
+                    .withDetails(details)
+                    .build();
+                    
         } catch (Exception e) {
-            log.error("Health check failed for rail: {}", railAdapter.getRailType(), e);
+            log.error("Health check failed for rail: {}", railProperties.getRailType(), e);
             
             return Health.down()
-                    .withDetail("railType", railAdapter.getRailType())
+                    .withDetail("railType", railProperties.getRailType())
                     .withDetail("error", e.getMessage())
                     .withException(e)
                     .build();
