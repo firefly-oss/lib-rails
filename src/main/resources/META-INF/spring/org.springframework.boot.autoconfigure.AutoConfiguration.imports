@@ -1,0 +1,2 @@
+com.firefly.rails.config.RailsAutoConfiguration
+com.firefly.rails.config.ResilienceConfiguration
