@@ -204,6 +204,56 @@ public Mono<PaymentResponse> sendInstant(@RequestBody InstantPaymentRequest req)
 }
 ```
 
+### Payment with Strong Customer Authentication (SCA)
+
+```java
+@PostMapping("/payment-with-sca")
+public Mono<AuthorizationResponse> initiateSecurePayment(@RequestBody PaymentRequest req) {
+    // Phase 1: Authorize payment (triggers SCA if needed)
+    return railAdapter.payments()
+        .authorizePayment(AuthorizePaymentRequest.builder()
+            .amount(new Money(req.getAmount(), Currency.EUR))
+            .debtorAccount(req.getDebtorAccount())
+            .creditorAccount(req.getCreditorAccount())
+            .transactionType(TransactionType.CREDIT_TRANSFER)
+            .authenticationContext(AuthenticationContext.withOtp(
+                "challenge-token",
+                "https://myapp.com/callback"))
+            .build())
+        .map(ResponseEntity::getBody)
+        .doOnNext(response -> {
+            if (response.isScaRequired()) {
+                // Store authorizationId and prompt user for OTP
+                log.info("SCA required. Authorization ID: {}", response.getAuthorizationId());
+                log.info("OTP sent via: {}", response.getScaMethod());
+            }
+        });
+}
+
+@PostMapping("/complete-sca")
+public Mono<PaymentResponse> completeScaAndConfirm(
+        @RequestParam String authorizationId,
+        @RequestParam String otpCode) {
+    
+    // Complete SCA authentication
+    return railAdapter.payments()
+        .completeAuthentication(CompleteAuthenticationRequest.builder()
+            .authorizationId(authorizationId)
+            .authenticationCode(otpCode)
+            .build())
+        .flatMap(authResponse -> {
+            if (authResponse.getBody().isScaCompleted()) {
+                // Phase 2: Confirm and execute payment
+                return railAdapter.payments()
+                    .confirmPayment(authorizationId)
+                    .map(ResponseEntity::getBody);
+            } else {
+                return Mono.error(new RuntimeException("Authentication failed"));
+            }
+        });
+}
+```
+
 ### Bulk Payment Submission
 
 ```java
@@ -256,6 +306,59 @@ Type-safe value objects for banking operations:
 ✅ Payment tracking & status  
 ✅ Reconciliation  
 ✅ Rail-specific features (extensible)  
+✅ **Strong Customer Authentication (SCA)** - PSD2 compliant two-factor authentication  
+✅ **Two-Phase Commit** - Authorize, authenticate, then confirm payments
+
+### Payment Execution Flows
+
+#### 1. Single-Phase Flow (Simple Payments)
+
+```
+Client → POST /payments → Rail → Response (Payment Created)
+```
+
+Use for:
+- Low-value transactions
+- Pre-authorized payments
+- No SCA required
+
+#### 2. Two-Phase Flow with SCA (Secure Payments)
+
+```
+Phase 1: Authorization
+Client → POST /payments/authorize → Rail
+       ← Authorization + SCA Challenge
+
+SCA Authentication:
+Client → POST /payments/authenticate (with OTP/code)
+       ← Authorization Confirmed
+
+Phase 2: Confirmation
+Client → POST /payments/confirm/{authId}
+       ← Payment Executed
+```
+
+Use for:
+- High-value transactions (>€30 for SEPA)
+- First-time beneficiaries
+- Regulatory compliance (PSD2/SCA)
+
+#### 3. Direct Debit Flow with Mandates
+
+```
+Setup Phase:
+Client → POST /mandates (create mandate)
+       ← Mandate ID
+
+Execution Phase:
+Client → POST /payments (with mandate reference)
+       ← Payment Executed
+```
+
+Use for:
+- Recurring payments
+- Subscription billing
+- Utility payments
 
 ## Implementation
 
@@ -319,7 +422,10 @@ Licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for detai
 For comprehensive documentation, see the [docs/](docs/) folder:
 
 - **[Complete Documentation Index](docs/README.md)** - Start here
+- **[Usage Guide](docs/USAGE_GUIDE.md)** - ✨ **NEW** Common payment scenarios (SEPA, SWIFT, SCA, etc.)
+- **[Implementation Guide](docs/IMPLEMENTATION_GUIDE.md)** - ✨ **NEW** Step-by-step guide to building new rails
 - **[Architecture Guide](docs/ARCHITECTURE.md)** - Hexagonal architecture and design patterns
+- **[Testing Guide](docs/TESTING_GUIDE.md)** - Comprehensive testing strategies
 - **[Complete Features](docs/ULTIMATE_FEATURES.md)** - All 54+ features with examples
 - **[Executive Summary](docs/EXECUTIVE_SUMMARY.md)** - Business value and ROI
 
